@@ -25,14 +25,17 @@ apiUserRoutes.get("/", async (req, res) => {
   apiUserRoutes.delete("/:id", async (req, res) => {
    
       const id = parseInt(req.params.id);
-      
-      const deleted = await UsersService.delete(id);
-      if (deleted) {
-        return res.json({ message: `User ${id} was deleted successfully` });
-      } 
-      else {
-        return res.json({ message: `User ${id} was not found.` });
+      try {
+        const deleted = await UsersService.delete(id);
+        if (deleted) {
+          return res.json({ message: `User ${id} was deleted successfully` });
+        } 
+
+      } catch (error) {
+        return res.json({ message: `User ${id} was not found and the error is ${error}` });
       }
+     
+     
   });
 
 
