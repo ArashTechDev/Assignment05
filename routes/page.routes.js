@@ -8,8 +8,9 @@ pageRoutes.get("/", (req, res) => {
 });
 
 pageRoutes.post("/", (req, res) => {
-  const authentication = AuthenticationService.authenticate(req.body.id, null);
-  if (authentication.isAutheticated) res.redirect(`/list`);
+  const authentication = AuthenticationService.authenticate(req.body.exampleInputEmail1, req.body.exampleInputPassword1);
+
+  if (authentication.isAuthenticated) res.redirect(`/list`);
   else res.redirect("/");
 });
 
