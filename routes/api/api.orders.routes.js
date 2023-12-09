@@ -23,12 +23,14 @@ apiOrderRoutes.get('/:id', async (req, res) => {
 
 apiOrderRoutes.delete('/:id', async (req, res) => {
      const id = parseInt(req.params.id);
-    
-    const deleted = await OrdersService.delete(id);
-    if (deleted) {
-      return res.json({ message: `Order ${id} was deleted successfully` });
-    } else {
-      return res.json({ message: `Order ${id} was not found` });
+     try {
+      const deleted = await OrdersService.delete(id);
+      if (deleted) {
+        return res.json({ message: `Order ${id} was deleted successfully` });
+      } 
+
+    } catch (error) {
+      return res.json({ message: `Order ${id} was not found and the error is ${error}` });
     }
 });
 

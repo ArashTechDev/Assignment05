@@ -22,12 +22,17 @@ apiProductRoutes.get('/:id', async (req, res) => {
 apiProductRoutes.delete('/:id', async (req, res) => { 
 
     const id = parseInt(req.params.id); 
-    const deleted = await ProductsService.delete(id);
-    if (deleted) {
-      return res.json({ message: `Product ${id} was deleted successfully` });
-    } else {
-      return res.json({ message: `Product ${id} not found` });
+
+    try {
+      const deleted = await ProductsService.delete(id);
+      if (deleted) {
+        return res.json({ message: `Product ${id} was deleted successfully` });
+      } 
+
+    } catch (error) {
+      return res.json({ message: `Product ${id} was not found and the error is ${error}` });
     }
+
 });
 
 apiProductRoutes.post('/', async (req, res) => {
