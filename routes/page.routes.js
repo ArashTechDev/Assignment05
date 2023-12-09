@@ -8,7 +8,7 @@ pageRoutes.get("/", (req, res) => {
 });
 
 pageRoutes.post("/", (req, res) => {
-  const authentication = AuthenticationService.authenticate(null, null);
+  const authentication = AuthenticationService.authenticate(req.body.id, null);
   if (authentication.isAutheticated) res.redirect(`/list`);
   else res.redirect("/");
 });
