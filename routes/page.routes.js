@@ -1,7 +1,9 @@
 const express = require("express");
 const pageRoutes = express.Router();
 const UsersService = require("../services/users.service");
+const ProductsService = require("../services/products.service");
 const AuthenticationService = require("../services/authentication.service");
+
 
 pageRoutes.get("/", (req, res) => {
   res.render("login");
@@ -10,9 +12,13 @@ pageRoutes.get("/", (req, res) => {
 pageRoutes.post("/", (req, res) => {
   const authentication = AuthenticationService.authenticate(req.body.exampleInputEmail1, req.body.exampleInputPassword1);
 
-  if (authentication.isAuthenticated) res.redirect(`/list`);
-  else res.redirect("/");
+  if (authentication) {
+    res.redirect(`/list`);
+  } else {
+    res.redirect("/");
+  }
 });
+
 
 pageRoutes.get("/list", async (req, res) => {
   const users = await UsersService.find();
@@ -37,5 +43,32 @@ pageRoutes.get("/detail/:id", async (req, res) => {
   const user = await UsersService.findById(req.params.id);
   res.render("detail", { user });
 });
+
+// PRODUCTS
+
+pageRoutes.get("/productList", async (req, res) => {
+  const products = await ProductsService.findAll();
+
+  const itemsToDisplay = 15;
+  const page = parseInt(req.query?.page) || 1;
+  const start = page == 1 ? 0 : (page - 1) * itemsToDisplay - 1;
+  const end = start + itemsToDisplay;
+  const filteredProducts = products.filter((product, idx) => idx > start && idx <= end);
+
+  res.render("productList", {
+    title: "list",
+    products: filteredProducts,
+    itemsToDisplay,
+    page,
+    start,
+    end,
+  });
+});
+
+pageRoutes.get("/detailProduct/:id", async (req, res) => {
+  const product = await ProductsService.findById(req.params.id);
+  res.render("detailProduct", { product });
+});
+
 
 module.exports = pageRoutes;
